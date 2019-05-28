@@ -1,6 +1,7 @@
 package com.ezetap.rborawar.ezetaptest;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -26,13 +27,17 @@ public class MainActivity extends AppCompatActivity {
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.ezetap.rborawar2.ezetap");
-                if (launchIntent != null) {
-                    launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    launchIntent.putExtra("number1", Integer.parseInt(editText1.getText().toString()));
-                    launchIntent.putExtra("number2", Integer.parseInt(editText2.getText().toString()));
-                    launchIntent.putExtra("action", "add");
-                    startActivity(launchIntent);
+                if (isPackageInstalled("com.ezetap.rborawar2.ezetap", getPackageManager())) {
+                    Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.ezetap.rborawar2.ezetap");
+                    if (launchIntent != null) {
+                        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        launchIntent.putExtra("number1", Integer.parseInt(editText1.getText().toString()));
+                        launchIntent.putExtra("number2", Integer.parseInt(editText2.getText().toString()));
+                        launchIntent.putExtra("action", "add");
+                        startActivity(launchIntent);
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(),"Please Installed the Other App for Calculation",Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -40,13 +45,17 @@ public class MainActivity extends AppCompatActivity {
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.ezetap.rborawar2.ezetap");
-                if (launchIntent != null) {
-                    launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    launchIntent.putExtra("number1", Integer.parseInt(editText1.getText().toString()));
-                    launchIntent.putExtra("number2", Integer.parseInt(editText2.getText().toString()));
-                    launchIntent.putExtra("action", "subtract");
-                    startActivity(launchIntent);
+                if (isPackageInstalled("com.ezetap.rborawar2.ezetap", getPackageManager())) {
+                    Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.ezetap.rborawar2.ezetap");
+                    if (launchIntent != null) {
+                        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        launchIntent.putExtra("number1", Integer.parseInt(editText1.getText().toString()));
+                        launchIntent.putExtra("number2", Integer.parseInt(editText2.getText().toString()));
+                        launchIntent.putExtra("action", "subtract");
+                        startActivity(launchIntent);
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(),"Please Installed the Other App for Calculation",Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -68,5 +77,20 @@ public class MainActivity extends AppCompatActivity {
             int result = bundle.getInt("result");
             textViewResult.setText(""+result);
         }
+    }
+
+    private boolean isPackageInstalled(String packageName, PackageManager packageManager) {
+
+        boolean found = true;
+
+        try {
+
+            packageManager.getPackageInfo(packageName, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+
+            found = false;
+        }
+
+        return found;
     }
 }
